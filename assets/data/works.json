@@ -14,7 +14,7 @@
       "persona": "20代後半から40代のビジネス層",
       "purpose": "CTR向上と専門性の訴求",
       "designPoint": "タイトルの可読性を最優先し、ネイビーとイエローでコントラストを設計",
-      "tools": ["Photoshop", "Figma"]
+      "tools": ["Photoshop"]
     }
   },
   {
@@ -50,7 +50,7 @@
       "persona": "10代後半から30代前半の幅広い視聴者",
       "purpose": "企画のインパクトを瞬時に伝える",
       "designPoint": "色数を絞りつつ装飾を足して、騒がしすぎず強い印象に調整",
-      "tools": ["Photoshop", "Illustrator"]
+      "tools": ["Photoshop"]
     }
   },
   {
@@ -68,7 +68,7 @@
       "persona": "学習目的で動画を見る視聴者",
       "purpose": "内容理解のしやすさと視認性の両立",
       "designPoint": "テキストブロックの階層分けで読みやすさを担保",
-      "tools": ["Figma", "Photoshop"]
+      "tools": ["Photoshop"]
     }
   },
   {
