@@ -14,6 +14,7 @@
 @import url("./object/project/p-contact.css");
 @import url("./object/utility/u-display.css");
 @import url("./object/utility/u-spacing.css");
+@import url("./object/utility/u-animation.css");
 
 .c-theme-toggle {
   min-width: 72px;
@@ -22,4 +23,9 @@
   border-radius: 999px;
   border: 1px solid var(--color-border);
   background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.c-theme-toggle__label {
+  color: inherit;
 }

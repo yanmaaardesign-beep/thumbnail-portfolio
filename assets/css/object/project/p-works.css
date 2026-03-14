@@ -5,7 +5,6 @@
 .p-hero__inner {
   width: min(calc(100% - 32px), var(--container-width));
   margin: 0 auto;
-  display: grid;
   grid-template-columns: 1.6fr 1fr;
   gap: 28px;
 }
@@ -19,7 +18,10 @@
 }
 
 .p-hero__copy {
-  background: radial-gradient(circle at top left, var(--color-accent-soft), transparent 40%), var(--color-surface);
+  padding: 24px 0 40px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .p-hero__profile {
@@ -40,21 +42,28 @@
   line-height: 1.16;
 }
 
-.p-hero__text,
-.p-hero__profile-text {
+.p-hero__text {
   margin-top: 18px;
+  font-size: 20px;
   color: var(--color-text-muted);
 }
 
 .p-hero__actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 12px;
   margin-top: 28px;
 }
 
 .p-hero__profile-title {
   font-size: 20px;
+}
+
+.p-hero__profile-text{
+  margin-top: 18px;
+  font-size: 18px;
+  color: var(--color-text-muted);
 }
 
 .p-hero__profile-meta {
@@ -126,7 +135,6 @@
 
 .p-modal-work__media {
   overflow: hidden;
-  border-radius: var(--radius-md);
   aspect-ratio: 16 / 9;
   background: var(--color-surface-alt);
 }
@@ -176,6 +184,37 @@
 
 .p-modal-work__detail dd + dt {
   margin-top: 6px;
+}
+
+/* Hero animation */
+.p-hero > * {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: heroFadeUp 0.8s ease forwards;
+}
+
+.p-hero__lead {
+  animation-delay: 0.05s;
+}
+
+.p-hero__title {
+  animation-delay: 0.15s;
+}
+
+.p-hero__text {
+  animation-delay: 0.3s;
+}
+
+.p-hero__actions {
+  animation-delay: 0.45s;
+}
+
+
+@keyframes heroFadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 1023px) {

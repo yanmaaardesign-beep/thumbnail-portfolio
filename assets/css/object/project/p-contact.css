@@ -22,7 +22,12 @@
   gap: 28px;
 }
 
-.p-work-detail__visual,
+.p-work-detail__visual {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 18px 40px var(--color-shadow);
+}
+
 .p-work-detail__content,
 .p-work-detail__aside {
   background: var(--color-surface);
@@ -42,7 +47,11 @@
   object-fit: cover;
 }
 
-.p-work-detail__content,
+.p-work-detail__content {
+  margin: 28px 0 0 0;
+  padding: 28px;
+}
+
 .p-work-detail__aside {
   padding: 28px;
 }

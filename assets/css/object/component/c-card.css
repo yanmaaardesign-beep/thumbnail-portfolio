@@ -10,7 +10,6 @@
 
 .c-card__thumb {
   overflow: hidden;
-  border-radius: calc(var(--radius-md) - 6px);
   aspect-ratio: 16 / 9;
   background: var(--color-surface-alt);
 }

@@ -189,6 +189,17 @@ function renderCarousel(works) {
       }
     });
   });
+
+  document.querySelectorAll(".c-carousel [data-work-modal]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const work = state.works.find((item) => item.id === button.dataset.workModal);
+      if (work) {
+        openModal(work);
+      }
+    });
+  });
+
+  initCarouselSwipe(works);
 }
 
 function updateCarousel() {
@@ -199,6 +210,38 @@ function updateCarousel() {
   selectors.carouselTrack.style.transform = `translateX(-${state.carouselIndex * 100}%)`;
   selectors.carouselDots?.querySelectorAll("[data-carousel-dot]").forEach((dot, index) => {
     dot.classList.toggle("is-active", index === state.carouselIndex);
+  });
+}
+
+function initCarouselSwipe(works) {
+  const viewport = document.querySelector(".c-carousel__viewport");
+
+  if (!viewport || !works.length) {
+    return;
+  }
+
+  let startX = 0;
+  let endX = 0;
+
+  viewport.addEventListener("touchstart", (event) => {
+    startX = event.touches[0].clientX;
+  }, { passive: true });
+
+  viewport.addEventListener("touchend", (event) => {
+    endX = event.changedTouches[0].clientX;
+    const diff = startX - endX;
+
+    if (Math.abs(diff) < 40) {
+      return;
+    }
+
+    if (diff > 0) {
+      state.carouselIndex = (state.carouselIndex + 1) % works.length;
+    } else {
+      state.carouselIndex = (state.carouselIndex - 1 + works.length) % works.length;
+    }
+
+    updateCarousel();
   });
 }
 
@@ -359,6 +402,30 @@ function initTheme() {
 function updateThemeButton(theme) {
   const label = selectors.themeToggle?.querySelector(".c-theme-toggle__label");
   if (label) {
-    label.textContent = theme === "dark" ? "Light" : "Dark";
+    label.textContent = theme === "dark" ? "ライトモード" : "ダークモード";
   }
+}
+
+initScrollReveal();
+
+function initScrollReveal() {
+  const targets = document.querySelectorAll(".js-scroll-fade");
+
+  if (!targets.length) {
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.16,
+    rootMargin: "0px 0px -40px 0px"
+  });
+
+  targets.forEach((target) => observer.observe(target));
 }

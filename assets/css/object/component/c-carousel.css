@@ -5,6 +5,7 @@
 
 .c-carousel__viewport {
   overflow: hidden;
+  border-radius: var(--radius-lg);
 }
 
 .c-carousel__track {
@@ -22,11 +23,10 @@
   border-radius: var(--radius-lg);
   background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-alt) 100%);
   border: 1px solid var(--color-border);
-  box-shadow: 0 18px 40px var(--color-shadow);
+  box-shadow: 0 10px 24px var(--color-shadow);
 }
 
 .c-carousel__image {
-  border-radius: calc(var(--radius-lg) - 10px);
   overflow: hidden;
   aspect-ratio: 16 / 9;
 }
@@ -86,8 +86,8 @@
 }
 
 .c-carousel__dot {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   background: var(--color-border);
 }
