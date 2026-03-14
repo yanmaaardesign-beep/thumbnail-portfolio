@@ -89,6 +89,7 @@
 
 .p-work-detail__aside p {
   margin-top: 12px;
+  margin-bottom: 20px;
   color: var(--color-text-muted);
 }
 

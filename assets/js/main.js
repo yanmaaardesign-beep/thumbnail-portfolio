@@ -372,7 +372,7 @@ function renderDetailPage(works) {
           </div>
           <aside class="p-work-detail__aside">
             <h2>この作品から相談する</h2>
-            <p>このテイストに近いサムネイルを依頼したい場合は、Xまたはメールから相談できます。参考作品として作品名やURLを共有するとスムーズです。</p>
+            <p>このテイストに近いサムネイルをご依頼いただける場合は、Xまたはメールからご相談可能です。参考作品として作品名やURLをご共有いただけるとスムーズです。</p>
             <div class="p-work-detail__actions">
               <a class="c-button c-button--primary" href="../contact/">お問い合わせページへ</a>
               <a class="c-button c-button--ghost" href="https://x.com/yanmardesign" target="_blank" rel="noreferrer">Xで相談</a>
