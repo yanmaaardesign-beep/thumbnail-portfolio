@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理画面 | やんまーデザイン</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="admin-page">
+  <header class="admin-header">
+    <div class="admin-header__inner">
+      <div>
+        <p class="admin-header__eyebrow">Admin</p>
+        <h1 class="admin-header__title">作品管理画面</h1>
+      </div>
+      <div class="admin-header__actions">
+        <span class="admin-status" data-auth-status>未ログイン</span>
+        <button class="admin-header__button" type="button" data-sign-out hidden>ログアウト</button>
+        <a class="admin-header__link" href="../">公開サイトを見る</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <section class="admin-auth-view" data-auth-view>
+      <section class="admin-auth-card">
+        <div class="admin-auth-card__copy">
+          <p class="admin-header__eyebrow">Admin Login</p>
+          <h2 class="admin-auth-card__title">ログインして作品を管理</h2>
+          <p class="admin-auth-card__text">管理者だけがログインして、作品データ・ピックアップ表示・分類情報を更新するための画面です。</p>
+          <ul class="admin-note-list">
+            <li>ピックアップ作品は `featured` で制御</li>
+            <li>分類は 制作種別 / ジャンル の2軸で管理</li>
+            <li>ドラフト作品は公開サイトに表示しません</li>
+          </ul>
+        </div>
+
+        <section class="admin-panel admin-panel--auth">
+          <div class="admin-panel__header">
+            <h2 class="admin-panel__title">ログイン</h2>
+            <p class="admin-panel__text">Supabase Auth に登録した管理者アカウントでログインします。</p>
+          </div>
+
+          <form class="admin-form admin-form--stack" data-auth-form>
+            <label class="admin-field">
+              <span class="admin-field__label">メールアドレス</span>
+              <input class="admin-field__control" type="email" name="email" placeholder="admin@example.com">
+            </label>
+
+            <label class="admin-field">
+              <span class="admin-field__label">パスワード</span>
+              <input class="admin-field__control" type="password" name="password" placeholder="********">
+            </label>
+
+            <div class="admin-form__actions admin-form__actions--stack">
+              <button class="admin-button admin-button--primary" type="submit">ログイン</button>
+            </div>
+          </form>
+        </section>
+      </section>
+    </section>
+
+    <section class="admin-app-view" data-app-view hidden>
+      <section class="admin-layout">
+        <section class="admin-panel">
+          <div class="admin-panel__header">
+            <h2 class="admin-panel__title">作品一覧</h2>
+            <p class="admin-panel__text">公開状態と分類を一覧で確認できます。</p>
+          </div>
+
+          <div class="admin-work-list" data-work-list>
+            <p class="admin-empty">Supabase 接続前はサンプル表示です。</p>
+          </div>
+        </section>
+
+        <section class="admin-panel admin-panel--main">
+          <div class="admin-panel__header">
+            <div>
+              <h2 class="admin-panel__title">新規作品を追加</h2>
+              <p class="admin-panel__text">新しい作品を登録するフォームです。既存作品の編集は一覧カードの「編集」から行えます。</p>
+            </div>
+            <div class="admin-panel__header-actions">
+              <button class="admin-button" type="button" data-reset-form>新規作品を追加</button>
+            </div>
+          </div>
+
+          <form class="admin-form" data-work-form>
+            <input type="hidden" name="work_id">
+            <div class="admin-form__grid">
+              <label class="admin-field">
+                <span class="admin-field__label">作品タイトル <span class="admin-field__meta admin-field__meta--required">必須</span></span>
+                <input class="admin-field__control" type="text" name="title" placeholder="例: ビジネス系YouTubeサムネイル">
+              </label>
+
+              <label class="admin-field">
+                <span class="admin-field__label">スラッグ <span class="admin-field__meta admin-field__meta--required">必須</span></span>
+                <input class="admin-field__control" type="text" name="slug" placeholder="business-thumb-01">
+              </label>
+            </div>
+
+            <div class="admin-form__grid">
+              <label class="admin-field">
+                <span class="admin-field__label">ステータス <span class="admin-field__meta admin-field__meta--required">必須</span></span>
+                <select class="admin-field__control" name="status">
+                  <option value="draft">下書き</option>
+                  <option value="published">公開</option>
+                </select>
+              </label>
+
+              <label class="admin-field">
+                <span class="admin-field__label">制作種別 <span class="admin-field__meta admin-field__meta--required">必須</span></span>
+                <select class="admin-field__control" name="source_type">
+                  <option value="self_made">自主制作</option>
+                  <option value="trace">トレース</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="admin-form__grid">
+              <label class="admin-field admin-field--checkbox">
+                <input type="checkbox" name="featured">
+                <span>ピックアップ作品に表示する</span>
+              </label>
+            </div>
+
+            <div class="admin-form__grid">
+              <label class="admin-field">
+                <span class="admin-field__label">ジャンル <span class="admin-field__meta admin-field__meta--required">必須</span></span>
+                <select class="admin-field__control" name="genre" data-genre-select></select>
+              </label>
+
+              <label class="admin-field">
+                <span class="admin-field__label">並び順 <span class="admin-field__meta admin-field__meta--optional">任意</span></span>
+                <input class="admin-field__control" type="number" name="sort_order" min="0" step="1" placeholder="0">
+              </label>
+            </div>
+
+            <label class="admin-field">
+              <span class="admin-field__label">短い説明 <span class="admin-field__meta admin-field__meta--required">必須</span></span>
+              <textarea class="admin-field__control admin-field__control--textarea" rows="3" name="description" placeholder="作品一覧とモーダルで使う説明文"></textarea>
+            </label>
+
+            <div class="admin-form__grid admin-form__grid--detail">
+              <label class="admin-field">
+                <span class="admin-field__label">制作時間 <span class="admin-field__meta admin-field__meta--optional">任意</span></span>
+                <input class="admin-field__control" type="text" name="production_time" placeholder="約2時間">
+              </label>
+
+              <label class="admin-field">
+                <span class="admin-field__label">使用ツール <span class="admin-field__meta admin-field__meta--optional">任意</span></span>
+                <input class="admin-field__control" type="text" name="tools" placeholder="Photoshop, Illustrator">
+              </label>
+
+              <label class="admin-field">
+                <span class="admin-field__label">ペルソナ <span class="admin-field__meta admin-field__meta--optional">任意</span></span>
+                <textarea class="admin-field__control admin-field__control--textarea" rows="3" name="persona" placeholder="想定視聴者やターゲット層"></textarea>
+              </label>
+
+              <label class="admin-field">
+                <span class="admin-field__label">サムネイルの目的 <span class="admin-field__meta admin-field__meta--optional">任意</span></span>
+                <textarea class="admin-field__control admin-field__control--textarea" rows="3" name="purpose" placeholder="CTR向上、内容理解の促進など"></textarea>
+              </label>
+
+              <label class="admin-field admin-field--full">
+                <span class="admin-field__label">デザインで意識した点 <span class="admin-field__meta admin-field__meta--optional">任意</span></span>
+                <textarea class="admin-field__control admin-field__control--textarea" rows="4" name="design_point" placeholder="配色、文字優先順位、視線誘導など"></textarea>
+              </label>
+            </div>
+
+            <label class="admin-field">
+              <span class="admin-field__label">作品画像 <span class="admin-field__meta admin-field__meta--optional">任意</span></span>
+              <input class="admin-field__control" type="file" name="work_image" accept="image/*">
+            </label>
+
+            <div class="admin-preview">
+              <p class="admin-preview__label">作品画像プレビュー</p>
+              <div class="admin-preview__frame" data-work-preview>未選択</div>
+            </div>
+
+            <div class="admin-form__actions">
+              <button class="admin-button admin-button--primary" type="submit">保存</button>
+              <button class="admin-button" type="button">下書き保存</button>
+            </div>
+            <p class="admin-form__message" data-form-message aria-live="polite"></p>
+          </form>
+
+          <div class="admin-genre-manager">
+            <div>
+              <p class="admin-genre-manager__title">ジャンルを追加</p>
+              <p class="admin-genre-manager__text">例: `ホラー` を追加すると、すぐ作品登録で選べるようになります。</p>
+            </div>
+            <form class="admin-genre-manager__form" data-genre-form>
+              <label class="admin-field">
+                <span class="admin-field__label">ジャンル名 <span class="admin-field__meta admin-field__meta--required">必須</span></span>
+                <input class="admin-field__control" type="text" name="genre_label" placeholder="例: ホラー">
+              </label>
+              <button class="admin-button" type="submit">ジャンル追加</button>
+            </form>
+            <div class="admin-genre-manager__list" data-genre-list></div>
+            <p class="admin-genre-manager__message" data-genre-message aria-live="polite"></p>
+          </div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <div class="admin-modal" data-edit-modal hidden>
+    <div class="admin-modal__backdrop" data-edit-modal-close></div>
+    <div class="admin-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="edit-modal-title">
+      <button class="admin-modal__close" type="button" data-edit-modal-close aria-label="閉じる">×</button>
+      <div class="admin-modal__body" data-edit-modal-body></div>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

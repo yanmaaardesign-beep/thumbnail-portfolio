@@ -1,8 +1,14 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { publicConfig } from "./public-config.js";
+
 const pathDepth = window.location.pathname.includes("/works/") || window.location.pathname.includes("/price/") || window.location.pathname.includes("/contact/") ? ".." : ".";
 
 const state = {
   works: [],
-  activeTag: "all",
+  filters: {
+    sourceType: "all",
+    genre: "all"
+  },
   carouselIndex: 0
 };
 
@@ -22,7 +28,8 @@ const selectors = {
   themeToggle: document.querySelector("[data-theme-toggle]")
 };
 
-const dataUrl = `${pathDepth}/assets/data/works.json`;
+const dataUrl = `${pathDepth}/${publicConfig.fallbackWorksUrl}`;
+const supabase = createPublicClient();
 
 document.addEventListener("DOMContentLoaded", async () => {
   initTheme();
@@ -47,6 +54,65 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function loadWorks() {
+  const supabaseWorks = await loadWorksFromSupabase();
+
+  if (supabaseWorks.length) {
+    return supabaseWorks;
+  }
+
+  return loadWorksFromJson();
+}
+
+function createPublicClient() {
+  if (!publicConfig.supabaseUrl || !publicConfig.supabaseAnonKey) {
+    return null;
+  }
+
+  return createClient(publicConfig.supabaseUrl, publicConfig.supabaseAnonKey);
+}
+
+async function loadWorksFromSupabase() {
+  if (!supabase) {
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from(publicConfig.worksTable)
+    .select(`
+      id,
+      title,
+      slug,
+      description,
+      production_time,
+      persona,
+      purpose,
+      design_point,
+      tools,
+      source_type,
+      featured,
+      status,
+      sort_order,
+      thumbnail_image_url,
+      large_image_url,
+      work_genres (
+        genres (
+          slug,
+          label
+        )
+      )
+    `)
+    .eq("status", "published")
+    .order("sort_order", { ascending: true });
+
+  if (error) {
+    console.warn("Failed to load works from Supabase. Falling back to local JSON.", error);
+    return [];
+  }
+
+  return (data || []).map(mapSupabaseWorkToPublicWork);
+}
+
+async function loadWorksFromJson() {
   const response = await fetch(dataUrl);
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}`);
@@ -55,9 +121,55 @@ async function loadWorks() {
   const works = await response.json();
   return works.map((work) => ({
     ...work,
+    sourceType: "",
+    genres: [...new Set(work.tags || [])],
     thumbnail: resolveAssetPath(work.thumbnail),
     imageLarge: resolveAssetPath(work.imageLarge)
   }));
+}
+
+function mapSupabaseWorkToPublicWork(work) {
+  const genreLabels = (work.work_genres || [])
+    .map((entry) => entry.genres?.label)
+    .filter(Boolean);
+
+  const tags = buildPublicTags(work, genreLabels);
+  const tools = Array.isArray(work.tools) ? work.tools.filter(Boolean) : [];
+
+  return {
+    id: work.id,
+    title: work.title,
+    slug: work.slug,
+    category: "thumbnail",
+    featured: Boolean(work.featured),
+    sourceType: work.source_type || "",
+    genres: genreLabels,
+    tags,
+    thumbnail: work.thumbnail_image_url || "",
+    imageLarge: work.large_image_url || work.thumbnail_image_url || "",
+    description: work.description,
+    detail: {
+      productionTime: work.production_time || "",
+      persona: work.persona || "",
+      purpose: work.purpose || "",
+      designPoint: work.design_point || "",
+      tools: tools.length ? tools : ["Photoshop"]
+    }
+  };
+}
+
+function buildPublicTags(work, genreLabels) {
+  const tags = [];
+
+  if (work.source_type === "self_made") {
+    tags.push("自主制作");
+  } else if (work.source_type === "trace") {
+    tags.push("トレース");
+  }
+
+  genreLabels.forEach((label) => tags.push(label));
+
+  return [...new Set(tags)];
 }
 
 function resolveAssetPath(path) {
@@ -78,20 +190,52 @@ function renderFilters(works) {
     return;
   }
 
-  const tags = ["all", ...new Set(works.flatMap((work) => work.tags))];
-  selectors.filterGroup.innerHTML = tags.map((tag) => {
-    const label = tag === "all" ? "すべて" : tag;
-    const activeClass = tag === state.activeTag ? " c-tag--active" : "";
-    return `<button class="c-tag${activeClass}" type="button" data-filter="${tag}">${label}</button>`;
-  }).join("");
+  const sourceTypeOptions = [
+    { value: "all", label: "すべて" },
+    { value: "self_made", label: "自主制作" },
+    { value: "trace", label: "トレース" }
+  ].filter((option) => option.value === "all" || works.some((work) => work.sourceType === option.value));
 
-  selectors.filterGroup.querySelectorAll("[data-filter]").forEach((button) => {
+  const genreOptions = [
+    { value: "all", label: "すべて" },
+    ...[...new Set(works.flatMap((work) => work.genres || []))]
+      .filter(Boolean)
+      .map((genre) => ({ value: genre, label: genre }))
+  ];
+
+  selectors.filterGroup.innerHTML = [
+    renderFilterSection("制作種別", "sourceType", sourceTypeOptions),
+    renderFilterSection("ジャンル", "genre", genreOptions)
+  ].join("");
+
+  selectors.filterGroup.querySelectorAll("[data-filter-group-key][data-filter-value]").forEach((button) => {
     button.addEventListener("click", () => {
-      state.activeTag = button.dataset.filter;
+      const groupKey = button.dataset.filterGroupKey;
+      const value = button.dataset.filterValue;
+
+      if (!groupKey || !Object.prototype.hasOwnProperty.call(state.filters, groupKey)) {
+        return;
+      }
+
+      state.filters[groupKey] = value;
       renderFilters(state.works);
       renderWorks(state.works);
     });
   });
+}
+
+function renderFilterSection(label, groupKey, options) {
+  return `
+    <section class="p-works__filter-group" aria-label="${label}">
+      <p class="p-works__filter-label">${label}</p>
+      <div class="p-works__filter-buttons">
+        ${options.map((option) => {
+          const activeClass = state.filters[groupKey] === option.value ? " c-tag--active" : "";
+          return `<button class="c-tag${activeClass}" type="button" data-filter-group-key="${groupKey}" data-filter-value="${option.value}">${option.label}</button>`;
+        }).join("")}
+      </div>
+    </section>
+  `;
 }
 
 function renderWorks(works) {
@@ -99,9 +243,7 @@ function renderWorks(works) {
     return;
   }
 
-  const filtered = state.activeTag === "all"
-    ? works
-    : works.filter((work) => work.tags.includes(state.activeTag));
+  const filtered = works.filter((work) => matchesFilters(work));
 
   selectors.worksGrid.innerHTML = filtered.map((work) => `
     <article class="c-card">
@@ -133,6 +275,13 @@ function renderWorks(works) {
   });
 }
 
+function matchesFilters(work) {
+  const sourceTypeMatches = state.filters.sourceType === "all" || work.sourceType === state.filters.sourceType;
+  const genreMatches = state.filters.genre === "all" || (work.genres || []).includes(state.filters.genre);
+
+  return sourceTypeMatches && genreMatches;
+}
+
 function renderCarousel(works) {
   if (!selectors.carouselTrack || !works.length) {
     return;
@@ -144,7 +293,7 @@ function renderCarousel(works) {
         <img src="${work.imageLarge}" alt="${work.title}" loading="lazy" width="960" height="540">
       </div>
       <div class="c-carousel__content">
-        <p class="l-section__lead">Featured</p>
+        <p class="l-section__lead">Pickup</p>
         <h3 class="c-carousel__title">${work.title}</h3>
         <p class="c-carousel__description">${work.description}</p>
         <div class="c-carousel__tags">
@@ -178,15 +327,6 @@ function renderCarousel(works) {
     dot.addEventListener("click", () => {
       state.carouselIndex = Number(dot.dataset.carouselDot);
       updateCarousel();
-    });
-  });
-
-  document.querySelectorAll(".c-carousel [data-work-modal]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const work = state.works.find((item) => item.id === button.dataset.workModal);
-      if (work) {
-        openModal(work);
-      }
     });
   });
 
@@ -250,6 +390,8 @@ function openModal(work) {
     return;
   }
 
+  const detailItems = buildDetailItems(work);
+
   selectors.modalBody.innerHTML = `
     <article class="p-modal-work">
       <div class="p-modal-work__media">
@@ -264,18 +406,10 @@ function openModal(work) {
       </div>
       <button class="c-button c-button--primary" type="button" data-detail-toggle>詳細を確認</button>
       <div class="p-modal-work__detail" data-detail-panel>
-        <dl>
-          <dt>制作時間</dt>
-          <dd>${work.detail.productionTime}</dd>
-          <dt>ペルソナ</dt>
-          <dd>${work.detail.persona}</dd>
-          <dt>サムネイルの目的</dt>
-          <dd>${work.detail.purpose}</dd>
-          <dt>デザインで意識した点</dt>
-          <dd>${work.detail.designPoint}</dd>
-          <dt>使用ツール</dt>
-          <dd>${work.detail.tools.join(" / ")}</dd>
-        </dl>
+        ${detailItems.length ? `<dl>${detailItems.map((item) => `
+          <dt>${item.label}</dt>
+          <dd>${item.value}</dd>
+        `).join("")}</dl>` : `<p class="p-modal-work__empty">詳細情報は準備中です。</p>`}
       </div>
       <div class="p-modal-work__actions">
         <a class="c-button c-button--primary" href="${pathDepth}/contact/">お問い合わせページへ</a>
@@ -331,6 +465,8 @@ function renderDetailPage(works) {
   }
 
   if (selectors.workDetail) {
+    const detailItems = buildDetailItems(work);
+
     selectors.workDetail.innerHTML = `
       <div class="l-section__inner">
         <div class="p-work-detail__layout">
@@ -346,28 +482,16 @@ function renderDetailPage(works) {
                 </div>
                 <p class="p-work-detail__description">${work.description}</p>
               </div>
-              <dl class="p-work-detail__meta">
-                <div>
-                  <dt>制作時間</dt>
-                  <dd>${work.detail.productionTime}</dd>
-                </div>
-                <div>
-                  <dt>ペルソナ</dt>
-                  <dd>${work.detail.persona}</dd>
-                </div>
-                <div>
-                  <dt>サムネイルの目的</dt>
-                  <dd>${work.detail.purpose}</dd>
-                </div>
-                <div>
-                  <dt>デザインで意識した点</dt>
-                  <dd>${work.detail.designPoint}</dd>
-                </div>
-                <div>
-                  <dt>使用ツール</dt>
-                  <dd>${work.detail.tools.join(" / ")}</dd>
-                </div>
-              </dl>
+              ${detailItems.length ? `
+                <dl class="p-work-detail__meta">
+                  ${detailItems.map((item) => `
+                    <div>
+                      <dt>${item.label}</dt>
+                      <dd>${item.value}</dd>
+                    </div>
+                  `).join("")}
+                </dl>
+              ` : ""}
             </div>
           </div>
           <aside class="p-work-detail__aside">
@@ -383,6 +507,24 @@ function renderDetailPage(works) {
       </div>
     `;
   }
+}
+
+function buildDetailItems(work) {
+  const items = [
+    { label: "制作時間", value: work.detail.productionTime },
+    { label: "ペルソナ", value: work.detail.persona },
+    { label: "サムネイルの目的", value: work.detail.purpose },
+    { label: "デザインで意識した点", value: work.detail.designPoint }
+  ].filter((item) => item.value);
+
+  if (Array.isArray(work.detail.tools) && work.detail.tools.length) {
+    items.push({
+      label: "使用ツール",
+      value: work.detail.tools.join(" / ")
+    });
+  }
+
+  return items;
 }
 
 function initTheme() {

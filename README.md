@@ -14,7 +14,7 @@ HTML / CSS / JavaScript で構築した静的サイトで、作品データは J
 
 主な機能:
 
-- おすすめ作品カルーセル
+- ピックアップ作品カルーセル
 - タグ絞り込み
 - モーダルでの作品拡大表示
 - 作品詳細ページ
@@ -75,6 +75,18 @@ http://localhost:8000
 ## Deployment
 
 GitHub Pages で公開できる構成です。
+
+## Future Admin
+
+管理画面化の土台として、以下のファイルを追加しています。
+
+- `admin/index.html`: 管理画面UI
+- `admin/styles.css`: 管理画面用スタイル
+- `admin/app.js`: 管理画面の動作スクリプト
+- `admin/config.example.js`: Supabase 接続設定のテンプレート
+- `docs/cms-migration.md`: 移行方針メモ
+- `docs/supabase-setup.md`: Supabase セットアップ手順
+- `supabase/schema.sql`: Supabase 用の初期スキーマ案
 
 ## Notes
 

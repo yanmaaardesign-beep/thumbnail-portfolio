@@ -9,12 +9,19 @@
 }
 
 .c-card__thumb {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  appearance: none;
   overflow: hidden;
+  border-radius: calc(var(--radius-md) - 6px);
   aspect-ratio: 16 / 9;
   background: var(--color-surface-alt);
 }
 
 .c-card__thumb img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;

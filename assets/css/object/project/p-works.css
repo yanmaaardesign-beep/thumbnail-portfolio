@@ -90,6 +90,22 @@
 }
 
 .p-works__filters {
+  display: grid;
+  gap: 16px;
+}
+
+.p-works__filter-group {
+  display: grid;
+  gap: 10px;
+}
+
+.p-works__filter-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.p-works__filter-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
