@@ -14,7 +14,7 @@
 
 .p-price__grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
 }
 
@@ -37,6 +37,8 @@
   color: var(--color-accent);
   font-size: 32px;
   font-weight: 800;
+  line-height: 1.2;
+  min-height: 1.2em;
 }
 
 .c-price-card__list,
@@ -47,6 +49,63 @@
 
 .c-price-card__list li + li {
   margin-top: 8px;
+}
+
+.c-price-option {
+  width: min(100%, 500px);
+  margin-top: 20px;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 28px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 18px 40px var(--color-shadow);
+}
+
+.c-price-option__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 24px;
+}
+
+.c-price-option__title {
+  font-size: 22px;
+}
+
+.c-price-option__lead {
+  color: var(--color-text-muted);
+}
+
+.c-price-option__table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.c-price-option__table tr + tr {
+  border-top: 1px solid var(--color-border);
+}
+
+.c-price-option__table th,
+.c-price-option__table td {
+  padding: 14px 0;
+  vertical-align: top;
+}
+
+.c-price-option__table th {
+  color: var(--color-text-muted);
+  font-weight: 500;
+  text-align: left;
+}
+
+.c-price-option__table td {
+  color: var(--color-accent);
+  font-weight: 700;
+  text-align: right;
+  white-space: nowrap;
 }
 
 .p-price__notes {
@@ -91,5 +150,12 @@
 
   .c-price-card__price {
     font-size: 24px;
+  }
+  .c-price-option {
+    padding: 24px;
+  }
+
+  .c-price-option__title {
+    font-size: 20px;
   }
 }
