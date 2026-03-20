@@ -7,14 +7,40 @@
   border-radius: 999px;
   font-weight: 700;
   border: 1px solid transparent;
+  transform: translateY(0);
 }
 
 .c-button--primary {
   background: var(--color-accent);
   color: #ffffff;
+  box-shadow: 0 4px 0 #102847;
 }
 
 .c-button--ghost {
   border-color: var(--color-border);
   background: var(--color-surface);
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--color-border) 85%, #aeb8c7 15%);
+}
+
+.c-button:hover {
+  transform: translateY(4px);
+  box-shadow: none;
+}
+
+.c-button:active {
+  transform: translateY(5px);
+  box-shadow: none;
+}
+
+[data-theme="dark"] .c-button--primary {
+  background: #7aa8f2;
+  color: #0f1a2c;
+  box-shadow: none;
+}
+
+[data-theme="dark"] .c-button--ghost {
+  border-color: #415274;
+  background: #22314d;
+  color: #f4f7fc;
+  box-shadow: none;
 }

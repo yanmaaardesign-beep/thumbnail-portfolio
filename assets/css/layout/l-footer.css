@@ -1,6 +1,6 @@
 .l-footer {
   border-top: 1px solid var(--color-border);
-  margin-top: 80px;
+  margin-top: 0;
 }
 
 .l-footer__inner {

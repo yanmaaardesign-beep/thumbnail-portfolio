@@ -449,6 +449,26 @@ function bindGlobalEvents() {
       closeModal();
     }
   });
+
+  document.addEventListener("contextmenu", (event) => {
+    if (isProtectedImageTarget(event.target)) {
+      event.preventDefault();
+    }
+  });
+
+  document.addEventListener("dragstart", (event) => {
+    if (isProtectedImageTarget(event.target)) {
+      event.preventDefault();
+    }
+  });
+}
+
+function isProtectedImageTarget(target) {
+  if (!(target instanceof Element)) {
+    return false;
+  }
+
+  return Boolean(target.closest(".c-card__thumb, .c-carousel__image, .p-modal-work__media, .p-work-detail__visual"));
 }
 
 function renderDetailPage(works) {

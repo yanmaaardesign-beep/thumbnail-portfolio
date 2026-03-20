@@ -29,7 +29,37 @@
 
 .c-price-card__title,
 .c-contact-card__title {
+  position: relative;
+  display: inline-block;
+  padding: 0.1em 0.52em;
   font-size: 22px;
+  letter-spacing: 0.02em;
+  background: #e0edff;
+  border-radius: 14px;
+}
+
+.c-price-card__title::before,
+.c-contact-card__title::before,
+.c-price-option__title::before,
+.p-price__section h2::before,
+.p-contact__guide h2::before {
+  content: none;
+}
+
+[data-theme="dark"] .c-price-card__title::before,
+[data-theme="dark"] .c-contact-card__title::before,
+[data-theme="dark"] .c-price-option__title::before,
+[data-theme="dark"] .p-price__section h2::before,
+[data-theme="dark"] .p-contact__guide h2::before {
+  content: none;
+}
+
+[data-theme="dark"] .c-price-card__title,
+[data-theme="dark"] .c-contact-card__title,
+[data-theme="dark"] .c-price-option__title,
+[data-theme="dark"] .p-price__section h2,
+[data-theme="dark"] .p-contact__guide h2 {
+  background: #2a3d5f;
 }
 
 .c-price-card__price {
@@ -72,7 +102,13 @@
 }
 
 .c-price-option__title {
+  position: relative;
+  display: inline-block;
+  padding: 0.1em 0.52em;
   font-size: 22px;
+  letter-spacing: 0.02em;
+  background: #e0edff;
+  border-radius: 14px;
 }
 
 .c-price-option__lead {
@@ -114,16 +150,44 @@
   margin-top: 28px;
 }
 
+.p-price__notes .p-price__section:first-child {
+  margin-top: 40px;
+}
+
 .p-price__section {
-  padding: 24px 28px;
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  padding: 0;
+}
+
+.p-price__section + .p-price__section {
+  margin-top: 30px;
 }
 
 .p-price__section h2,
 .p-contact__guide h2 {
+  position: relative;
+  display: inline-block;
+  padding: 0.1em 0.52em;
   font-size: 20px;
+  letter-spacing: 0.02em;
+  background: #e0edff;
+  border-radius: 14px;
+}
+
+.p-price__section h2::before,
+.p-contact__guide h2::before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 24px;
+  width: 0;
+  height: 0;
+  border: 10px solid transparent;
+  border-top: 10px solid #e0edff;
+}
+
+[data-theme="dark"] .p-price__section h2::before,
+[data-theme="dark"] .p-contact__guide h2::before {
+  border-top-color: #2a3d5f;
 }
 
 .p-price__section p,
@@ -157,5 +221,11 @@
 
   .c-price-option__title {
     font-size: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .p-page-header {
+    padding: 28px 0 32px;
   }
 }

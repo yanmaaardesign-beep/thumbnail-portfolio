@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>管理画面 | やんまーデザイン</title>
   <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body class="admin-page">
@@ -169,8 +172,8 @@
             </div>
 
             <label class="admin-field">
-              <span class="admin-field__label">作品画像 <span class="admin-field__meta admin-field__meta--optional">任意</span></span>
-              <input class="admin-field__control" type="file" name="work_image" accept="image/*">
+              <span class="admin-field__label">作品画像 <span class="admin-field__meta admin-field__meta--required">必須</span></span>
+              <input class="admin-field__control" type="file" name="work_image" accept="image/*" required>
             </label>
 
             <div class="admin-preview">

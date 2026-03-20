@@ -11,6 +11,9 @@
 <meta property="og:image" content="./assets/images/common/ogp-default.svg">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap">
 <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body class="page page--home">
@@ -31,10 +34,22 @@
   </header>
 
   <main>
+    <section class="p-request-banner" aria-label="ご依頼受付中">
+      <div class="p-request-banner__inner">
+        <picture>
+          <source media="(max-width: 767px)" srcset="./assets/images/common/request-banner-sp.jpg">
+          <img class="p-request-banner__image" src="./assets/images/common/request-banner-pc.jpg" alt="ご依頼受付中" width="2240" height="448" loading="eager">
+        </picture>
+      </div>
+    </section>
+
     <div class="p-hero">
       <div class="p-hero__inner">
         <section class="p-hero__copy">
-          <h1 class="p-hero__title">視認性と伝わりやすさを重視した<br>サムネイル制作ポートフォリオ</h1>
+          <h1 class="p-hero__title">
+            <span class="p-hero__title-line">視認性と伝わりやすさを重視した</span><br>
+            <span class="p-hero__title-line">サムネイル制作<span class="p-hero__title-break"></span>ポートフォリオ</span>
+          </h1>
           <p class="p-hero__text">クリックされやすさと情報の伝わりやすさを両立したデザインを制作します。<br>初回相談はXまたはメールから受け付けております。</p>
           <div class="p-hero__actions">
             <a class="c-button c-button--primary" href="./contact/">ご依頼について相談する</a>
@@ -43,7 +58,12 @@
         </section>
         <aside class="p-hero__profile">
           <h2 class="p-hero__profile-title">About</h2>
-          <p class="p-hero__profile-text">名前：やんまー</p>
+          <div class="p-hero__profile-head">
+            <div class="p-hero__profile-icon">
+              <img src="./assets/images/common/profile-icon.jpg" alt="やんまーのアイコン" width="160" height="160" loading="lazy">
+            </div>
+            <p class="p-hero__profile-text p-hero__profile-text--name">名前：やんまー</p>
+          </div>
           <p class="p-hero__profile-text">YouTubeサムネイルを中心に、視線誘導、文字の優先順位、ワード選定、配色コントラストを意識したデザインを制作しています。<br>ご連絡いただいてから最大12時間以内にご返信いたします。</p>
           <dl class="p-hero__profile-meta">
             <div>

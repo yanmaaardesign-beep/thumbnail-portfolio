@@ -21,7 +21,50 @@
   text-transform: uppercase;
 }
 
-.l-section__title {
+h1.l-section__title {
+  margin-top: 12px;
+  padding: 0;
   font-size: clamp(28px, 4vw, 44px);
   line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+
+h2.l-section__title {
+  position: relative;
+  display: inline-block;
+  margin-top: 12px;
+  padding: 0.45em 0.8em;
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  background: #e0edff;
+  border-radius: 14px;
+}
+
+h2.l-section__title::before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 30px;
+  width: 0;
+  height: 0;
+  border: 15px solid transparent;
+  border-top: 15px solid #e0edff;
+[data-theme="dark"] h2.l-section__title::before {
+  border-top-color: #2a3d5f;
+}
+
+[data-theme="dark"] h2.l-section__title {
+  background: #2a3d5f;
+}
+
+@media (max-width: 767px) {
+  .l-section {
+    padding-bottom: 56px;
+  }
+
+  h1.l-section__title,
+  h2.l-section__title {
+    font-size: 24px;
+  }
 }
