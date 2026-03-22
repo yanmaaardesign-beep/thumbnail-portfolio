@@ -10,6 +10,38 @@
   padding: 0;
 }
 
+.c-contact-card--coconala {
+  margin-top: 80px;
+  margin-bottom: 80px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.c-contact-card__title--coconala {
+  background: #ffe2c2;
+}
+
+.c-contact-card__title--coconala::before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 24px;
+  width: 0;
+  height: 0;
+  border: 10px solid transparent;
+  border-top: 10px solid #ffe2c2;
+}
+
+[data-theme="dark"] .c-contact-card__title--coconala {
+  background: #6b4a22;
+}
+
+[data-theme="dark"] .c-contact-card__title--coconala::before {
+  border-top-color: #6b4a22;
+}
+
 .c-contact-card__text + .c-button {
   margin-top: 20px;
 }
@@ -137,6 +169,11 @@
 }
 
 @media (max-width: 767px) {
+  .c-contact-card--coconala {
+    margin-top: 60px;
+    margin-bottom: 60px;
+  }
+
   .p-work-detail__actions {
     margin-top: 10px;
     gap: 14px 10px;
